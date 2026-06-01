@@ -26,7 +26,7 @@ function App() {
 				{noticias?.map(({ id, titulo, fecha, resumen }: Noticia) => (
 					<article
 						key={titulo}
-						className="island-shell feature-card rise-in rounded-2xl p-5"
+						className="island-shell feature-card rise-in rounded-2xl p-5 select-none"
 						style={{ animationDelay: `${id * 90 + 80}ms` }}
 					>
 						<h2 className="m-0 shrink-0 text-sm mb-2 font-black tracking-tight">
