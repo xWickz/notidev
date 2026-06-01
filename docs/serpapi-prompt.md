@@ -1,0 +1,1 @@
+noticias tecnología y desarrollo {{ $json.fecha_actual }}
