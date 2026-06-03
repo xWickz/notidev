@@ -1,13 +1,17 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
 import { supabase } from "../utils/supabase";
+
+const MAX_NEWS = 5;
 
 export const Route = createFileRoute("/")({
 	loader: async () => {
 		const { data: noticias } = await supabase
 			.from("noticias")
 			.select("id, titulo, fecha, resumen")
-			.order("id", { ascending: false });
-		return noticias;
+			.order("id", { ascending: false })
+			.range(0, MAX_NEWS - 1);
+		return noticias || [];
 	},
 	component: App,
 });
@@ -19,7 +23,28 @@ type Noticia = {
 	resumen: string;
 };
 function App() {
-	const noticias = Route.useLoaderData();
+	const initialData = Route.useLoaderData();
+	const [noticias, setNoticias] = useState(initialData);
+	const [page, setPage] = useState(1);
+	const [loading, setLoading] = useState(false);
+
+	const loadMore = async () => {
+		setLoading(true);
+		const start = page * MAX_NEWS;
+		const end = start + MAX_NEWS - 1;
+		const { data } = await supabase
+			.from("noticias")
+			.select("id, titulo, fecha, resumen")
+			.order("id", { ascending: false })
+			.range(start, end);
+
+		if (data) {
+			setNoticias((prev) => [...prev, ...data]);
+			setPage((prev) => prev + 1);
+		}
+		setLoading(false);
+	};
+
 	return (
 		<main className="page-wrap px-4 pb-8 pt-1">
 			<section className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -39,6 +64,14 @@ function App() {
 					</article>
 				))}
 			</section>
+			<button
+				type="button"
+				className="btn mt-8 mx-auto block"
+				onClick={loadMore}
+				disabled={loading}
+			>
+				{loading ? "Cargando..." : "Cargar más"}
+			</button>
 		</main>
 	);
 }
