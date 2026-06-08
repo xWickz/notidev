@@ -47,30 +47,63 @@ function App() {
 
 	return (
 		<main className="page-wrap px-4 pb-8 pt-1">
-			<section className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-				{noticias?.map(({ id, titulo, fecha, resumen }: Noticia) => (
-					<article
-						key={titulo}
-						className="island-shell feature-card rise-in rounded-2xl p-5 select-none"
-						style={{ animationDelay: `${id * 90 + 80}ms` }}
-					>
-						<h2 className="m-0 shrink-0 text-sm mb-2 font-black tracking-tight">
-							{fecha}
-						</h2>
-						<h2 className="mb-2 text-base font-semibold text-(--sea-ink)">
-							{titulo}
-						</h2>
-						<p className="m-0 text-sm text-(--sea-ink-soft)">{resumen}</p>
+			{/* Hero / Latest News */}
+			<section className="mt-6 mb-10">
+				<div className="border-b border-(--line) pb-4 mb-6">
+					<span className="island-kicker text-xs tracking-[0.2em]">
+						Últimas noticias
+					</span>
+				</div>
+				{noticias && noticias.length > 0 && (
+					<article className="feature-card rounded-2xl p-6 sm:p-8 select-none">
+						<time className="text-xs font-semibold text-(--text-muted) uppercase tracking-wider">
+							{noticias[0].fecha}
+						</time>
+						<h1 className="mt-3 mb-3 text-2xl sm:text-3xl font-extrabold leading-tight text-(--text-primary)">
+							{noticias[0].titulo}
+						</h1>
+						<p className="m-0 text-base text-(--text-secondary) leading-relaxed max-w-2xl">
+							{noticias[0].resumen}
+						</p>
 					</article>
-				))}
+				)}
 			</section>
+
+			{/* More News Grid */}
+			<section>
+				<div className="border-b border-(--line) pb-4 mb-6">
+					<span className="island-kicker text-xs tracking-[0.2em]">
+						Más noticias
+					</span>
+				</div>
+				<div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+					{noticias?.slice(1).map(({ id, titulo, fecha, resumen }: Noticia) => (
+						<article
+							key={titulo}
+							className="island-shell feature-card rounded-2xl p-5 select-none"
+							style={{ animationDelay: `${id * 90 + 80}ms` }}
+						>
+							<time className="block text-xs font-semibold text-(--text-muted) uppercase tracking-wider mb-2">
+								{fecha}
+							</time>
+							<h2 className="mb-2 text-base font-bold leading-snug text-(--text-primary)">
+								{titulo}
+							</h2>
+							<p className="m-0 text-sm text-(--text-secondary) leading-relaxed">
+								{resumen}
+							</p>
+						</article>
+					))}
+				</div>
+			</section>
+
 			<button
 				type="button"
-				className="btn mt-8 mx-auto block"
+				className="btn mt-10 mx-auto block"
 				onClick={loadMore}
 				disabled={loading}
 			>
-				{loading ? "Cargando..." : "Cargar más"}
+				{loading ? "Cargando..." : "Cargar más noticias"}
 			</button>
 		</main>
 	);
